@@ -38,38 +38,26 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#include "settings.h"
+#ifdef Q_OS_MAC
+#include "cocoasettings.h"
+#else
+#include "dconfsettings.h"
+#endif
 
-#include <QtCore/qobject.h>
-#include <QtCore/qstring.h>
-#include <QtCore/qstringlist.h>
-
-class Settings : public QObject
+Settings::Settings(QObject *parent) : QObject(parent)
 {
-    Q_OBJECT
+}
 
-public:
-    explicit Settings(QObject *parent = 0);
-    virtual ~Settings();
+Settings::~Settings()
+{
+}
 
-    static Settings* create(QObject *parent = 0);
-
-    virtual void remove(const QString &key) = 0;
-    virtual void set(const QString &key, const QVariant &value) = 0;
-    virtual bool get(const QString &key, QVariant *value) const = 0;
-
-    enum ChildSpec { AllKeys, ChildKeys, ChildGroups };
-    virtual QStringList children(const QString &prefix, ChildSpec spec) const = 0;
-
-    virtual void clear() = 0;
-    virtual void sync() = 0;
-    virtual void flush() = 0;
-    virtual bool isWritable() const = 0;
-    virtual QString fileName() const = 0;
-
-Q_SIGNALS:
-    void changed(const QString &key, const QVariant &value);
-};
-
-#endif // SETTINGS_H
+Settings* Settings::create(QObject *parent)
+{
+#ifdef Q_OS_MAC
+    return new CocoaSettings(parent);
+#else
+    return new DConfSettings(parent);
+#endif
+}

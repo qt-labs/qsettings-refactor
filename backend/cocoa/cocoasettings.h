@@ -38,38 +38,30 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef COCOASETTINGS_H
+#define COCOASETTINGS_H
 
-#include <QtCore/qobject.h>
-#include <QtCore/qstring.h>
-#include <QtCore/qstringlist.h>
+#include "settings.h"
 
-class Settings : public QObject
+class CocoaSettings : public Settings
 {
     Q_OBJECT
 
 public:
-    explicit Settings(QObject *parent = 0);
-    virtual ~Settings();
+    explicit CocoaSettings(QObject *parent = 0);
+    ~CocoaSettings();
 
-    static Settings* create(QObject *parent = 0);
+    void remove(const QString &key);
+    void set(const QString &key, const QVariant &value);
+    bool get(const QString &key, QVariant *value) const;
 
-    virtual void remove(const QString &key) = 0;
-    virtual void set(const QString &key, const QVariant &value) = 0;
-    virtual bool get(const QString &key, QVariant *value) const = 0;
+    QStringList children(const QString &prefix, ChildSpec spec) const;
 
-    enum ChildSpec { AllKeys, ChildKeys, ChildGroups };
-    virtual QStringList children(const QString &prefix, ChildSpec spec) const = 0;
-
-    virtual void clear() = 0;
-    virtual void sync() = 0;
-    virtual void flush() = 0;
-    virtual bool isWritable() const = 0;
-    virtual QString fileName() const = 0;
-
-Q_SIGNALS:
-    void changed(const QString &key, const QVariant &value);
+    void clear();
+    void sync();
+    void flush();
+    bool isWritable() const;
+    QString fileName() const;
 };
 
-#endif // SETTINGS_H
+#endif // COCOASETTINGS_H
