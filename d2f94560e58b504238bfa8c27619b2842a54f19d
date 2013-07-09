@@ -1,0 +1,7 @@
+Sanity-Review+1: Qt Sanity Bot <qt_sanitybot@qt-project.org>
+Code-Review+2: J-P Nurmi <jpnurmi@digia.com>
+Submitted-by: J-P Nurmi <jpnurmi@digia.com>
+Submitted-at: Tue, 09 Jul 2013 16:34:21 +0200
+Reviewed-on: https://codereview.qt-project.org/60765
+Project: qt-labs/qsettings-refactor
+Branch: refs/heads/master
