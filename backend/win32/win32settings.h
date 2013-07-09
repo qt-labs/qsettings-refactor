@@ -38,32 +38,30 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#ifndef WIN32SETTINGS_H
+#define WIN32SETTINGS_H
+
 #include "settings.h"
-#if defined(Q_OS_WIN)
-#include "win32settings.h"
-#elif defined(Q_OS_MAC)
-#include "cocoasettings.h"
-#elif defined(Q_OS_UNIX)
-#include "dconfsettings.h"
-#else
-#error Unsupported platform.
-#endif
 
-Settings::Settings(QObject *parent) : QObject(parent)
+class Win32Settings : public Settings
 {
-}
+    Q_OBJECT
 
-Settings::~Settings()
-{
-}
+public:
+    explicit Win32Settings(QObject *parent = 0);
+    ~Win32Settings();
 
-Settings* Settings::create(QObject *parent)
-{
-#if defined(Q_OS_WIN)
-    return new Win32Settings(parent);
-#elif defined(Q_OS_MAC)
-    return new CocoaSettings(parent);
-#elif defined(Q_OS_UNIX)
-    return new DConfSettings(parent);
-#endif
-}
+    void remove(const QString &key);
+    void set(const QString &key, const QVariant &value);
+    bool get(const QString &key, QVariant *value) const;
+
+    QStringList children(const QString &prefix, ChildSpec spec) const;
+
+    void clear();
+    void sync();
+    void flush();
+    bool isWritable() const;
+    QString fileName() const;
+};
+
+#endif // WIN32SETTINGS_H
