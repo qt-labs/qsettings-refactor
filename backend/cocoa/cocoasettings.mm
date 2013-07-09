@@ -39,6 +39,8 @@
 **
 ****************************************************************************/
 #include "cocoasettings.h"
+#include <private/qcore_mac_p.h>
+#include <Foundation/NSUserDefaults.h>
 
 CocoaSettings::CocoaSettings(QObject *parent) : Settings(parent)
 {
@@ -50,10 +52,14 @@ CocoaSettings::~CocoaSettings()
 
 void CocoaSettings::remove(const QString &key)
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey: QCFString::toNSString(key)];
 }
 
 void CocoaSettings::set(const QString &key, const QVariant &value)
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObjectForKey: QCFString::toNSString(key)];
 }
 
 bool CocoaSettings::get(const QString &key, QVariant *value) const
@@ -63,7 +69,13 @@ bool CocoaSettings::get(const QString &key, QVariant *value) const
 
 QStringList CocoaSettings::children(const QString &prefix, ChildSpec spec) const
 {
-    return QStringList();
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dict = [defaults dictionaryRepresentation];
+
+    QStringList lst;
+    for (id key in [dict allKeys])
+        lst += QCFString::toQString(key);
+    return lst;
 }
 
 void CocoaSettings::clear()
@@ -72,10 +84,12 @@ void CocoaSettings::clear()
 
 void CocoaSettings::sync()
 {
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 void CocoaSettings::flush()
 {
+    sync();
 }
 
 bool CocoaSettings::isWritable() const
