@@ -40,9 +40,9 @@
 ****************************************************************************/
 #include <QCoreApplication>
 #include <QtDebug>
-#include "dconfsettings.h"
+#include "settings.h"
 
-static void printSettings(const DConfSettings *settings, const QString &prefix)
+static void printSettings(const Settings *settings, const QString &prefix)
 {
     const QStringList keys = settings->children(prefix, Settings::ChildKeys);
     if (!keys.isEmpty()) {
@@ -64,15 +64,15 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    DConfSettings settings;
+    Settings *settings = Settings::create(&app);
 
-    printSettings(&settings, "/");
+    printSettings(settings, "/");
     qDebug() << "\n\n";
 
-    settings.set("/org/qt-project/bool", true);
-    settings.set("/org/qt-project/chr", QChar('a'));
-    settings.set("/org/qt-project/num", 123);
-    settings.set("/org/qt-project/str", "foo");
+    settings->set("/org/qt-project/bool", true);
+    settings->set("/org/qt-project/chr", QChar('a'));
+    settings->set("/org/qt-project/num", 123);
+    settings->set("/org/qt-project/str", "foo");
 
     return app.exec();
 }

@@ -3,8 +3,11 @@ TARGET = settings
 INCLUDEPATH += . include
 QT = core
 
-# Input
-HEADERS += include/settings.h
-SOURCES += main.cpp
+HEADERS += \
+    include/settings.h
+
+SOURCES += \
+    main.cpp \
+    src/settings.cpp
 
 include(backend/backend.pri)
